@@ -14,8 +14,10 @@ remote.add_interface("twitch_deathworld",{
                 force.print({"", "[Twitch] ", name, " contributed to ", research.localised_name}, {0, 1, 0, 1});
             end
             rcon.print("worked");
+            return;
         end
         rcon.print("failed");
+        return;
     end,
 
     hurt_research = function (name, amount)
@@ -33,7 +35,9 @@ remote.add_interface("twitch_deathworld",{
                 force.print({"", "[Twitch] ", name, " set back ", research.localised_name}, {1, 0, 0, 1});
             end
             rcon.print("worked");
+            return;
         end
         rcon.print("failed");
+        return;
     end
 });
