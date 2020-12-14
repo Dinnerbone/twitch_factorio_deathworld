@@ -46,7 +46,7 @@ remote.add_interface("twitch_deathworld",{
 
         local targetPlayer = game.get_player(targetName);
 
-        if targetName == "*" then
+        if targetName == "*" or targetName == "" then
             local playerCount = #game.players;
             targetPlayer = game.players[math.random(1, playerCount)];
         else 
