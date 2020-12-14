@@ -41,15 +41,23 @@ remote.add_interface("twitch_deathworld",{
         return;
     end,
 
-    plant_tree = function (target)
-        local player = game.get_player(target);
+    plant_tree = function (targetName)
         local planted = false;
 
-        if player then
+        local targetPlayer = game.get_player(targetName);
+        if targetPlayer == nil then
+            for _, player in pairs(game.players) do
+                if string.find(string.lower(player.name), string.lower(targetName)) then
+                    targetPlayer = player; 
+                end
+            end
+        end
+
+        if targetPlayer then
             for x = -5,5 do
                 for y = -5,5 do
-                    local targetX = player.position.x + x;
-                    local targetY = player.position.y + y;
+                    local targetX = targetPlayer.position.x + x;
+                    local targetY = targetPlayer.position.y + y;
                     local createdEntity = game.surfaces.nauvis.create_entity({name="tree-01", amount=1, position={targetX, targetY}});
                     if createdEntity then
                         planted = true;
