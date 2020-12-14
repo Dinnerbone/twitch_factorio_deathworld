@@ -45,10 +45,16 @@ remote.add_interface("twitch_deathworld",{
         local planted = false;
 
         local targetPlayer = game.get_player(targetName);
-        if targetPlayer == nil then
-            for _, player in pairs(game.players) do
-                if string.find(string.lower(player.name), string.lower(targetName)) then
-                    targetPlayer = player; 
+
+        if targetName == "*" then
+            local playerCount = #game.players;
+            targetPlayer = game.players[math.random(1, playerCount)];
+        else 
+            if targetPlayer == nil then
+                for _, player in pairs(game.players) do
+                    if string.find(string.lower(player.name), string.lower(targetName)) then
+                        targetPlayer = player; 
+                    end
                 end
             end
         end
