@@ -41,7 +41,7 @@ remote.add_interface("twitch_deathworld",{
         return;
     end,
 
-    plant_tree = function (targetName)
+    plant_tree = function (targetName, amount)
         local planted = false;
 
         local targetPlayer = game.get_player(targetName);
@@ -60,21 +60,18 @@ remote.add_interface("twitch_deathworld",{
         end
 
         if targetPlayer then
-            for x = -3,3 do
-                for y = -3,3 do
-                    local targetX = targetPlayer.position.x + x + math.random(0, 6);
-                    local targetY = targetPlayer.position.y + y + math.random(0, 6);
-                    local createdEntity = game.surfaces.nauvis.create_entity({name="tree-01", amount=1, position={targetX, targetY}});
-                    if createdEntity then
-                        planted = true;
-                        rcon.print("worked");
-                        return;
-                    end
+            for i = 1, tonumber(amount) do
+                local targetX = targetPlayer.position.x + math.random(-6, 6);
+                local targetY = targetPlayer.position.y + math.random(-6, 6);
+                local createdEntity = game.surfaces.nauvis.create_entity({name="tree-01", amount=1, position={targetX, targetY}});
+                if createdEntity then
+                    planted = true;
                 end
             end
-            
+
             if planted then
                 rcon.print("worked");
+                return;
             else
                 rcon.print("failed|Unable to plant tree here");
                 return;
