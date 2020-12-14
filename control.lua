@@ -60,10 +60,10 @@ remote.add_interface("twitch_deathworld",{
         end
 
         if targetPlayer then
-            for x = -5,5 do
-                for y = -5,5 do
-                    local targetX = targetPlayer.position.x + x;
-                    local targetY = targetPlayer.position.y + y;
+            for x = -3,3 do
+                for y = -3,3 do
+                    local targetX = targetPlayer.position.x + x + math.random(0, 6);
+                    local targetY = targetPlayer.position.y + y + math.random(0, 6);
                     local createdEntity = game.surfaces.nauvis.create_entity({name="tree-01", amount=1, position={targetX, targetY}});
                     if createdEntity then
                         planted = true;
