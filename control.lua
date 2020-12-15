@@ -91,9 +91,9 @@ remote.add_interface("twitch_deathworld",{
         end
         
         modifier = tonumber(modifier)
-
-        for i,player in pairs(game.players) do
-            if target_player_name == "all_players" or target_player_name == player.name then
+        target_player_name = target_player_name.lower
+        for _,player in pairs(game.players) do
+            if target_player_name == "all_players" or target_player_name == player.name.lower then
                 if player.character ~= nil then
                     local base_speed = player.character["character_running_speed_modifier"]
                     local resultant_speed = base_speed + modifier
@@ -103,9 +103,17 @@ remote.add_interface("twitch_deathworld",{
                     else
                         player.force.print({"", "[Twitch] ", name, " Nerfed ", player.name, "'s run speed"}, {1, 0, 0, 1});
                     end
+                else
+                    rcon.print({"failed|Unable to find player character for ", player.name});
+                    return;
                 end
+            else
+                rcon.print("failed|Unable to find player by that name");
+                return;
             end
         end
+        rcon.print("worked");
+        return;
     end,
 });
 
