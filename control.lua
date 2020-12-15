@@ -17,9 +17,11 @@ remote.add_interface("twitch_deathworld",{
                 force.research_progress = new_amount;
                 force.print({"", "[Twitch] ", name, " contributed to ", research.localised_name}, {0, 1, 0, 1});
             end
-            return "worked";
+            rcon.print("worked");
+            return;
         end
-        return "failed";
+        rcon.print("failed");
+        return;
     end,
 
     hurt_research = function (name, amount)
@@ -36,9 +38,51 @@ remote.add_interface("twitch_deathworld",{
                 force.research_progress = new_amount;
                 force.print({"", "[Twitch] ", name, " set back ", research.localised_name}, {1, 0, 0, 1});
             end
-            return "worked";
+            rcon.print("worked");
+            return;
         end
-        return "failed";
+        rcon.print("failed");
+        return;
+    end,
+      
+    plant_tree = function (targetName, amount)
+        local planted = false;
+
+        local targetPlayer = game.get_player(targetName);
+
+        if targetName == "*" or targetName == "" then
+            local playerCount = #game.players;
+            targetPlayer = game.players[math.random(1, playerCount)];
+        else 
+            if targetPlayer == nil then
+                for _, player in pairs(game.players) do
+                    if string.find(string.lower(player.name), string.lower(targetName)) then
+                        targetPlayer = player; 
+                    end
+                end
+            end
+        end
+
+        if targetPlayer then
+            for i = 1, tonumber(amount) do
+                local targetX = targetPlayer.position.x + math.random(-6, 6);
+                local targetY = targetPlayer.position.y + math.random(-6, 6);
+                local createdEntity = game.surfaces.nauvis.create_entity({name="tree-01", amount=1, position={targetX, targetY}});
+                if createdEntity then
+                    planted = true;
+                end
+            end
+
+            if planted then
+                rcon.print("worked");
+                return;
+            else
+                rcon.print("failed|Unable to plant tree here");
+                return;
+            end
+        end
+        rcon.print("failed|Unable to find player by that name");
+        return;
     end,
 
     modify_run_speed = function (name, target_player_name, modifier)
@@ -62,6 +106,6 @@ remote.add_interface("twitch_deathworld",{
                 end
             end
         end
-    end
+    end,
 });
 
