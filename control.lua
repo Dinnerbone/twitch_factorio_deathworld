@@ -86,8 +86,8 @@ remote.add_interface("twitch_deathworld",{
 
     modify_run_speed = function (name, target_player_name, modifier_change, lower_limit, upper_limit)
         local target_player = get_target_player_from_name(target_player_name)       
-        lower_limit = lower_limit or 0.5
-        upper_limit = upper_limit or 3
+        lower_limit = lower_limit or -0.5
+        upper_limit = upper_limit or 2
         modifier_change = tonumber(modifier_change)
 
         if target_player and target_player.character ~= nil then
@@ -100,8 +100,8 @@ remote.add_interface("twitch_deathworld",{
                 if current_speed_modifier == lower_limit then
                     limits_reached = true
                 end
-            elseif resultant_speed_modifier > 3 then
-                resultant_speed_modifier = 3
+            elseif resultant_speed_modifier > upper_limit then
+                resultant_speed_modifier = upper_limit
                 if current_speed_modifier == upper_limit then
                     limits_reached = true
                 end
