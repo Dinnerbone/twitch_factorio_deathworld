@@ -131,6 +131,62 @@ remote.add_interface("twitch_deathworld",{
         return;
     end,
 
+    spawn_enemies = function (name, targetName, amountOfBases, amountOfEnemies, silent)
+        local planted = false;
+        local targetPlayer = get_target_player_from_name(targetName)
+        local baseSize = 10
+        local distanceToPlayer = 30 + math.random(50)
+        local angle = math.random() * math.pi * 2;
+        local centerX = targetPlayer.position.x + math.cos(angle) * distanceToPlayer;
+        local centerY = targetPlayer.position.y + math.sin(angle) * distanceToPlayer;
+        local baseNames = {"biter-spawner", "spitter-spawner"}
+        local enemyNames = {
+            "behemoth-biter",
+            "behemoth-spitter",
+            "big-biter",
+            "big-spitter",
+            "medium-biter",
+            "medium-spitter",
+            "small-biter",
+            "small-spitter"
+        }
+
+        if targetPlayer then
+            for i = 1, tonumber(amountOfBases) do
+                local targetX = centerX + math.random(-baseSize, baseSize);
+                local targetY = centerY + math.random(-baseSize, baseSize);
+                local entityType = baseNames[math.random(#baseNames)]
+                local createdEntity = game.surfaces.nauvis.create_entity({name=entityType, amount=1, position={targetX, targetY}});
+                if createdEntity then
+                    planted = true;
+                end
+            end
+
+            for i = 1, tonumber(amountOfEnemies) do
+                local targetX = centerX + math.random(-baseSize, baseSize);
+                local targetY = centerY + math.random(-baseSize, baseSize);
+                local entityType = enemyNames[math.random(#enemyNames)]
+                local createdEntity = game.surfaces.nauvis.create_entity({name=entityType, amount=1, position={targetX, targetY}});
+                if createdEntity then
+                    planted = true;
+                end
+            end
+
+            if planted then
+                if not silent then
+                    targetPlayer.force.print({"", "[Twitch] ", name, " found some new friends near ", targetPlayer.name, ". Awwww, feel the love!"}, {0.8, 0.2, 0.2, 1});
+                end
+                rcon.print("worked");
+                return;
+            else
+                rcon.print("failed|Unable to create enemies here");
+                return;
+            end
+        end
+        rcon.print("failed|Unable to find player by that name");
+        return;
+    end,
+
     modify_run_speed = function (name, target_player_name, modifier_change, lower_limit, upper_limit, buff_length)
         local target_player = get_target_player_from_name(target_player_name)
         lower_limit = lower_limit or -0.5
