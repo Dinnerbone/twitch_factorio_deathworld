@@ -102,7 +102,7 @@ remote.add_interface("twitch_deathworld",{
         return;
     end,
 
-    plant_tree = function (targetName, amount)
+    plant_tree = function (name, targetName, amount, silent)
         local planted = false;
         local targetPlayer = get_target_player_from_name(targetName)
 
@@ -117,6 +117,9 @@ remote.add_interface("twitch_deathworld",{
             end
 
             if planted then
+                if not silent then
+                    targetPlayer.force.print({"", "[Twitch] ", name, " planted a lovely forest near ", targetPlayer.name, " <3"}, {0.2, 0.8, 0.2, 1});
+                end
                 rcon.print("worked");
                 return;
             else
