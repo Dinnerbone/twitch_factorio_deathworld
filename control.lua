@@ -40,27 +40,30 @@ local function check_for_expired_buffs (nth_tick_event)
     end
 end
 
--- script.on_init(function ()
---     global.player_buffs = global.player_buffs or {}
--- end)
+script.on_init(function ()
+    global.player_buffs = global.player_buffs or {}
+end)
 
--- script.on_nth_tick(60, function ()
---     check_for_expired_buffs()
--- end)
+script.on_nth_tick(60, function ()
+    check_for_expired_buffs()
+end)
 
--- script.on_event(defines.events.on_player_joined_game, function(event)
---     global.player_buffs[event.player_index] = {}
--- end)
+script.on_event(defines.events.on_player_joined_game, function(event)
+    if global.player_buffs == nil then
+        global.player_buffs = {}
+    end
+    global.player_buffs[event.player_index] = {}
+end)
 
--- script.on_event(defines.events.on_pre_player_left_game, function(event)
---     if not global.player_buffs then
---         return
---     end
---     for buff_name, buff_value in pairs(global.player_buffs[event.player_index]) do
---         reset_player_buff(event.player_index, buff_name)
---     end
---     global.player_buffs[event.player_index] = nil
--- end)
+script.on_event(defines.events.on_pre_player_left_game, function(event)
+    if global.player_buffs == nil then
+        return
+    end
+    for buff_name, buff_value in pairs(global.player_buffs[event.player_index]) do
+        reset_player_buff(event.player_index, buff_name)
+    end
+    global.player_buffs[event.player_index] = nil
+end)
 
 remote.add_interface("twitch_deathworld",{
     help_research = function (name, amount)
