@@ -137,6 +137,49 @@ remote.add_interface("twitch_deathworld",{
         return;
     end,
 
+    drain_accumulators = function (name, amount, silent)
+        local drained = 0;
+        local accumulators = game.surfaces.nauvis.find_entities_filtered{type="accumulator"};
+
+        for i = 1, #accumulators do
+            local accumulator = accumulators[i];
+            local toDrain = math.min(accumulator.energy, amount - drained);
+            accumulator.energy = accumulator.energy - toDrain;
+            drained = drained + toDrain;
+        end
+
+        if drained > 0 then
+            if not silent then
+                game.print({"", "[Twitch] ", name, " drained the power network..."}, {1, 0, 0, 1});
+            end
+            rcon.print("worked");
+        else
+            rcon.print("failed|There's no power to drain!");
+        end
+    end,
+
+    fill_accumulators = function (name, amount, silent)
+        local filled = 0;
+        local accumulators = game.surfaces.nauvis.find_entities_filtered{type="accumulator"};
+
+        for i = 1, #accumulators do
+            local accumulator = accumulators[i];
+            local old = accumulator.energy;
+            accumulator.energy = accumulator.energy + (amount - filled);
+            local delta = accumulator.energy - old;
+            filled = filled + delta;
+        end
+
+        if filled > 0 then
+            if not silent then
+                game.print({"", "[Twitch] ", name, " charged the power network..."}, {0.2, 0.8, 0.2, 1});
+            end
+            rcon.print("worked");
+        else
+            rcon.print("failed|The network is already fully charged!");
+        end
+    end,
+
     spawn_enemies = function (name, targetName, amountOfBases, amountOfEnemies, silent)
         local planted = false;
         local targetPlayer = get_target_player_from_name(targetName)
@@ -162,7 +205,7 @@ remote.add_interface("twitch_deathworld",{
                 local targetX = centerX + math.random(-baseSize, baseSize);
                 local targetY = centerY + math.random(-baseSize, baseSize);
                 local entityType = baseNames[math.random(#baseNames)]
-                local createdEntity = game.surfaces.nauvis.create_entity({name=entityType, amount=1, position={targetX, targetY}});
+                local createdEntity = game.surfaces.nauvis.create_entity({name="twitch-power-drainer", position={p.x, p.y}});
                 if createdEntity then
                     planted = true;
                 end
