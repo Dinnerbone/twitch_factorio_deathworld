@@ -205,7 +205,7 @@ remote.add_interface("twitch_deathworld",{
                 local targetX = centerX + math.random(-baseSize, baseSize);
                 local targetY = centerY + math.random(-baseSize, baseSize);
                 local entityType = baseNames[math.random(#baseNames)]
-                local createdEntity = game.surfaces.nauvis.create_entity({name="twitch-power-drainer", position={p.x, p.y}});
+                local createdEntity = game.surfaces.nauvis.create_entity({name=entityType, amount=1, position={targetX, targetY}});
                 if createdEntity then
                     planted = true;
                 end
