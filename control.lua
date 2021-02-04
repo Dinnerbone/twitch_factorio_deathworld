@@ -193,9 +193,10 @@ remote.add_interface("twitch_deathworld",{
     spawn_enemies = function (name, targetName, amountOfBases, amountOfEnemies, silent)
         local planted = false;
         local targetPlayer = get_target_player_from_name(targetName)
-        local baseSize = 10
+        local baseSize = 15
         local distanceToPlayer = 30 + math.random(50)
         local angle = math.random() * math.pi * 2;
+        local amountOfWorms = amountOfBases * 0.75
         local baseNames = {"biter-spawner", "spitter-spawner"}
         local enemyNames = {
             "behemoth-biter",
@@ -207,14 +208,33 @@ remote.add_interface("twitch_deathworld",{
             "small-biter",
             "small-spitter"
         }
+        local wormNames = {
+            "behemoth-worm-turret",
+            "big-worm-turret",
+            "medium-worm-turret",
+            "small-worm-turret",
+        }
 
         if targetPlayer then
             local centerX = targetPlayer.position.x + math.cos(angle) * distanceToPlayer;
             local centerY = targetPlayer.position.y + math.sin(angle) * distanceToPlayer;
+            local anglePerBase = (math.pi * 2) / tonumber(amountOfBases);
+            local anglePerWorm = (math.pi * 2) / tonumber(amountOfWorms);
+
             for i = 1, tonumber(amountOfBases) do
-                local targetX = centerX + math.random(-baseSize, baseSize);
-                local targetY = centerY + math.random(-baseSize, baseSize);
+                local targetX = centerX + math.cos((i - 1) * anglePerBase) * baseSize;
+                local targetY = centerY + math.sin((i - 1) * anglePerBase) * baseSize;
                 local entityType = baseNames[math.random(#baseNames)]
+                local createdEntity = game.surfaces.nauvis.create_entity({name=entityType, amount=1, position={targetX, targetY}});
+                if createdEntity then
+                    planted = true;
+                end
+            end
+
+            for i = 1, tonumber(amountOfWorms) do
+                local targetX = centerX + math.cos((i - 1) * anglePerWorm) * (baseSize * 1.5);
+                local targetY = centerY + math.sin((i - 1) * anglePerWorm) * (baseSize * 1.5);
+                local entityType = wormNames[math.random(#wormNames)]
                 local createdEntity = game.surfaces.nauvis.create_entity({name=entityType, amount=1, position={targetX, targetY}});
                 if createdEntity then
                     planted = true;
