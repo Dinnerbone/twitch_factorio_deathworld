@@ -1,7 +1,13 @@
 
 local function get_target_player_from_name (target_name)
     if target_name == "*" or target_name == "" then
-        return game.players[math.random(#game.players)]
+        local players = {}
+        for _, player in pairs(game.players) do
+            if player.connected then
+                table.insert(players, player)
+            end
+        end
+        return players[math.random(#players)]
     end
 
     local target_player = game.get_player(target_name)
@@ -13,7 +19,11 @@ local function get_target_player_from_name (target_name)
         end
     end
 
-    return target_player
+    if target_player and target_player.connected then
+        return target_player
+    else
+        return nil
+    end
 end
 
 
@@ -186,8 +196,6 @@ remote.add_interface("twitch_deathworld",{
         local baseSize = 10
         local distanceToPlayer = 30 + math.random(50)
         local angle = math.random() * math.pi * 2;
-        local centerX = targetPlayer.position.x + math.cos(angle) * distanceToPlayer;
-        local centerY = targetPlayer.position.y + math.sin(angle) * distanceToPlayer;
         local baseNames = {"biter-spawner", "spitter-spawner"}
         local enemyNames = {
             "behemoth-biter",
@@ -201,6 +209,8 @@ remote.add_interface("twitch_deathworld",{
         }
 
         if targetPlayer then
+            local centerX = targetPlayer.position.x + math.cos(angle) * distanceToPlayer;
+            local centerY = targetPlayer.position.y + math.sin(angle) * distanceToPlayer;
             for i = 1, tonumber(amountOfBases) do
                 local targetX = centerX + math.random(-baseSize, baseSize);
                 local targetY = centerY + math.random(-baseSize, baseSize);
