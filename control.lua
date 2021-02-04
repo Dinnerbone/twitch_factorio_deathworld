@@ -194,7 +194,7 @@ remote.add_interface("twitch_deathworld",{
         local planted = false;
         local targetPlayer = get_target_player_from_name(targetName)
         local baseSize = 15
-        local distanceToPlayer = 30 + math.random(50)
+        local distanceToPlayer = 40 + math.random(70)
         local angle = math.random() * math.pi * 2;
         local amountOfWorms = amountOfBases * 0.75
         local baseNames = {"biter-spawner", "spitter-spawner"}
