@@ -32,6 +32,8 @@ local function reset_player_buff (player_index, buff_name)
     if buff == nil then return end
 
     local p = game.get_player(player_index)
+    if p == nil then return end
+
     p[buff_name] = buff["default"]
     buff = nil
 end
