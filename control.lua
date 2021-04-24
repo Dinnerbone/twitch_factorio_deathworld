@@ -1,5 +1,6 @@
 
 local function get_target_player_from_name (target_name)
+    print("looking for: "..target_name)
     if target_name == "*" or target_name == "" then
         local players = {}
         for _, player in pairs(game.players) do
@@ -332,5 +333,17 @@ remote.add_interface("twitch_deathworld",{
         rcon.print("worked")
         return
     end,
-});
 
+    drop_meteor = function (name, targetName, count, range)
+        local target_player = get_target_player_from_name(targetName)
+        if target_player then
+            remote.call("space-exploration", "begin_meteor_shower", {target_entity = target_player, meteors = count, range = range})
+            target_player.force.print({"", "[Twitch] ", name, " spawned a meteor (or a few...) on top of ", target_player.name, ". Awwww, feel the love!"}, {0.8, 0.2, 0.2, 1});
+            rcon.print("worked")
+            return;
+        end
+        rcon.print("failed|Unable to find player by that name");
+        return;
+    end,
+    
+});
