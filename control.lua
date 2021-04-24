@@ -1,6 +1,5 @@
 
 local function get_target_player_from_name (target_name)
-    print("looking for: "..target_name)
     if target_name == "*" or target_name == "" then
         local players = {}
         for _, player in pairs(game.players) do
