@@ -192,7 +192,7 @@ remote.add_interface("twitch_deathworld",{
         end
     end,
 
-    spawn_enemies = function (name, targetName, amountOfBases, amountOfEnemies, silent)
+    spawn_enemies = function (name, targetName, amountOfBases, amountOfEnemies, silent, behemoths)
         local planted = false;
         local targetPlayer = get_target_player_from_name(targetName)
         local baseSize = amountOfBases * 1.75
@@ -201,8 +201,6 @@ remote.add_interface("twitch_deathworld",{
         local amountOfWorms = amountOfBases * 0.75
         local baseNames = {"biter-spawner", "spitter-spawner"}
         local enemyNames = {
-            "behemoth-biter",
-            "behemoth-spitter",
             "big-biter",
             "big-spitter",
             "medium-biter",
@@ -211,11 +209,16 @@ remote.add_interface("twitch_deathworld",{
             "small-spitter"
         }
         local wormNames = {
-            "behemoth-worm-turret",
             "big-worm-turret",
             "medium-worm-turret",
             "small-worm-turret",
         }
+
+        if behemoths then
+            table.insert(enemyNames, "behemoth-biter");
+            table.insert(enemyNames, "behemoth-spitter");
+            table.insert(wormNames, "behemoth-worm-turret");
+        end
 
         if targetPlayer then
             local centerX = targetPlayer.position.x + math.cos(angle) * distanceToPlayer;
@@ -344,5 +347,4 @@ remote.add_interface("twitch_deathworld",{
         rcon.print("failed|Unable to find player by that name");
         return;
     end,
-    
 });
