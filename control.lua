@@ -192,7 +192,7 @@ remote.add_interface("twitch_deathworld",{
         end
     end,
 
-    spawn_enemies = function (name, targetName, amountOfBases, amountOfEnemies, silent, behemoths)
+    spawn_enemies = function (name, targetName, amountOfBases, amountOfEnemies, silent, medium, large, behemoth)
         local planted = false;
         local targetPlayer = get_target_player_from_name(targetName)
         local baseSize = amountOfBases * 1.75
@@ -201,19 +201,23 @@ remote.add_interface("twitch_deathworld",{
         local amountOfWorms = amountOfBases * 0.75
         local baseNames = {"biter-spawner", "spitter-spawner"}
         local enemyNames = {
-            "big-biter",
-            "big-spitter",
-            "medium-biter",
-            "medium-spitter",
             "small-biter",
             "small-spitter"
         }
         local wormNames = {
-            "big-worm-turret",
-            "medium-worm-turret",
             "small-worm-turret",
         }
 
+        if medium then
+            table.insert(enemyNames, "medium-biter");
+            table.insert(enemyNames, "medium-spitter");
+            table.insert(wormNames, "medium-worm-turret");
+        end
+        if large then
+            table.insert(enemyNames, "big-biter");
+            table.insert(enemyNames, "big-spitter");
+            table.insert(wormNames, "big-worm-turret");
+        end
         if behemoths then
             table.insert(enemyNames, "behemoth-biter");
             table.insert(enemyNames, "behemoth-spitter");
